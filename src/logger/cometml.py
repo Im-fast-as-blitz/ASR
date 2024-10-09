@@ -103,7 +103,8 @@ class CometMLWriter:
         else:
             duration = datetime.now() - self.timer
             self.add_scalar(
-                "steps_per_sec", (self.step - previous_step) / duration.total_seconds()
+                "steps_per_sec",
+                (self.step - previous_step) / duration.total_seconds(),
             )
             self.timer = datetime.now()
 
@@ -177,7 +178,9 @@ class CometMLWriter:
                 in the CometML-friendly format.
         """
         self.exp.log_image(
-            image_data=image, name=self._object_name(image_name), step=self.step
+            image_data=image,
+            name=self._object_name(image_name),
+            step=self.step,
         )
 
     def add_audio(self, audio_name, audio, sample_rate=None):
@@ -206,7 +209,9 @@ class CometMLWriter:
             text (str): text content.
         """
         self.exp.log_text(
-            text=text, step=self.step, metadata={"name": self._object_name(text_name)}
+            text=text,
+            step=self.step,
+            metadata={"name": self._object_name(text_name)},
         )
 
     def add_histogram(self, hist_name, values_for_hist, bins=None):
@@ -229,7 +234,9 @@ class CometMLWriter:
         #     np_hist = np.histogram(values_for_hist, bins=512)
 
         self.exp.log_histogram_3d(
-            values=values_for_hist, name=self._object_name(hist_name), step=self.step
+            values=values_for_hist,
+            name=self._object_name(hist_name),
+            step=self.step,
         )
 
     def add_table(self, table_name, table: pd.DataFrame):

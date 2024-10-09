@@ -70,6 +70,14 @@ To run inference (evaluate the model or save predictions):
 python3 inference.py HYDRA_CONFIG_ARGUMENTS
 ```
 
+## TODO
+
+0. src/metrics/utils calc_cer calc_wer
+
+1. src/text_encoder/ctc_text_encoder.py ctc_decode ctc_decode_beamsearch
+
+2. src/datasets collate_fn
+
 ## Credits
 
 This repository is based on a [PyTorch Project Template](https://github.com/Blinorot/pytorch_project_template).

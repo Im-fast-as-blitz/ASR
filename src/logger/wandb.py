@@ -84,7 +84,8 @@ class WandBWriter:
         else:
             duration = datetime.now() - self.timer
             self.add_scalar(
-                "steps_per_sec", (self.step - previous_step) / duration.total_seconds()
+                "steps_per_sec",
+                (self.step - previous_step) / duration.total_seconds(),
             )
             self.timer = datetime.now()
 
@@ -154,7 +155,8 @@ class WandBWriter:
                 format.
         """
         self.wandb.log(
-            {self._object_name(image_name): self.wandb.Image(image)}, step=self.step
+            {self._object_name(image_name): self.wandb.Image(image)},
+            step=self.step,
         )
 
     def add_audio(self, audio_name, audio, sample_rate=None):
@@ -185,7 +187,8 @@ class WandBWriter:
             text (str): text content.
         """
         self.wandb.log(
-            {self._object_name(text_name): self.wandb.Html(text)}, step=self.step
+            {self._object_name(text_name): self.wandb.Html(text)},
+            step=self.step,
         )
 
     def add_histogram(self, hist_name, values_for_hist, bins=None):

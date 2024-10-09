@@ -2,12 +2,11 @@ from abc import abstractmethod
 
 import torch
 from numpy import inf
-from torch.nn.utils import clip_grad_norm_
-from tqdm.auto import tqdm
-
 from src.datasets.data_utils import inf_loop
 from src.metrics.tracker import MetricTracker
 from src.utils.io_utils import ROOT_PATH
+from torch.nn.utils import clip_grad_norm_
+from tqdm.auto import tqdm
 
 
 class BaseTrainer:
@@ -383,7 +382,8 @@ class BaseTrainer:
         """
         if self.config["trainer"].get("max_grad_norm", None) is not None:
             clip_grad_norm_(
-                self.model.parameters(), self.config["trainer"]["max_grad_norm"]
+                self.model.parameters(),
+                self.config["trainer"]["max_grad_norm"],
             )
 
     @torch.no_grad()

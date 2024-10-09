@@ -4,7 +4,6 @@ import hydra
 import torch
 from hydra.utils import instantiate
 from omegaconf import OmegaConf
-
 from src.datasets.data_utils import get_dataloaders
 from src.trainer import Trainer
 from src.utils.init_utils import set_random_seed, setup_saving_and_logging

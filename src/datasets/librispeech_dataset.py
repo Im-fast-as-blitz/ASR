@@ -5,10 +5,9 @@ from pathlib import Path
 
 import torchaudio
 import wget
-from tqdm import tqdm
-
 from src.datasets.base_dataset import BaseDataset
 from src.utils.io_utils import ROOT_PATH
+from tqdm import tqdm
 
 URL_LINKS = {
     "dev-clean": "https://www.openslr.org/resources/12/dev-clean.tar.gz",

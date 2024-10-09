@@ -1,8 +1,7 @@
 import torch
-from tqdm.auto import tqdm
-
 from src.metrics.tracker import MetricTracker
 from src.trainer.base_trainer import BaseTrainer
+from tqdm.auto import tqdm
 
 
 class Inferencer(BaseTrainer):
@@ -140,8 +139,6 @@ class Inferencer(BaseTrainer):
         current_id = batch_idx * batch_size
 
         for i in range(batch_size):
-            # clone because of
-            # https://github.com/pytorch/pytorch/issues/1995
             logits = batch["logits"][i].clone()
             label = batch["labels"][i].clone()
             pred_label = logits.argmax(dim=-1)

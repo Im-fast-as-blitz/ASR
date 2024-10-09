@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import pandas as pd
-
 from src.logger.utils import plot_spectrogram
 from src.metrics.tracker import MetricTracker
 from src.metrics.utils import calc_cer, calc_wer
@@ -90,11 +89,15 @@ class Trainer(BaseTrainer):
         self.writer.add_image("spectrogram", image)
 
     def log_predictions(
-        self, text, log_probs, log_probs_length, audio_path, examples_to_log=10, **batch
+        self,
+        text,
+        log_probs,
+        log_probs_length,
+        audio_path,
+        examples_to_log=10,
+        **batch,
     ):
-        # TODO add beam search
-        # Note: by improving text encoder and metrics design
-        # this logging can also be improved significantly
+        beam_size = 10
 
         argmax_inds = log_probs.cpu().argmax(-1).numpy()
         argmax_inds = [
@@ -103,13 +106,21 @@ class Trainer(BaseTrainer):
         ]
         argmax_texts_raw = [self.text_encoder.decode(inds) for inds in argmax_inds]
         argmax_texts = [self.text_encoder.ctc_decode(inds) for inds in argmax_inds]
-        tuples = list(zip(argmax_texts, text, argmax_texts_raw, audio_path))
+        # bs_text = self.text_encoder.ctc_decode_beamsearch_with_lm(log_probs, log_probs_length, beam_size)
+        bs_text = [
+            self.text_encoder.ctc_decode_beamsearch(prob, length, beam_size)
+            for prob, length in zip(log_probs, log_probs_length)
+        ]
+        tuples = list(zip(bs_text, argmax_texts, text, argmax_texts_raw, audio_path))
 
         rows = {}
-        for pred, target, raw_pred, audio_path in tuples[:examples_to_log]:
+        for bs_pred, pred, target, raw_pred, audio_path in tuples[:examples_to_log]:
             target = self.text_encoder.normalize_text(target)
             wer = calc_wer(target, pred) * 100
             cer = calc_cer(target, pred) * 100
+
+            bs_wer = calc_wer(target, bs_pred[0]) * 100
+            bs_cer = calc_cer(target, bs_pred[0]) * 100
 
             rows[Path(audio_path).name] = {
                 "target": target,
@@ -117,6 +128,10 @@ class Trainer(BaseTrainer):
                 "predictions": pred,
                 "wer": wer,
                 "cer": cer,
+                "bs_prediction": bs_pred,
+                "bs_wer": bs_wer,
+                "bs_cer": bs_cer,
+                "audio": self.writer.wandb.Audio(audio_path),
             }
         self.writer.add_table(
             "predictions", pd.DataFrame.from_dict(rows, orient="index")

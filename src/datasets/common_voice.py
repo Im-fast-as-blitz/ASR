@@ -3,11 +3,10 @@ import re
 from pathlib import Path
 
 import torchaudio
-from tqdm import tqdm
-
 from datasets import load_dataset
 from src.datasets.base_dataset import BaseDataset
 from src.utils.io_utils import ROOT_PATH
+from tqdm import tqdm
 
 
 class CommonVoiceDataset(BaseDataset):

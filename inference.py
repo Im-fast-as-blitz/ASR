@@ -3,7 +3,6 @@ import warnings
 import hydra
 import torch
 from hydra.utils import instantiate
-
 from src.datasets.data_utils import get_dataloaders
 from src.trainer import Inferencer
 from src.utils.init_utils import set_random_seed
