@@ -6,7 +6,7 @@ from src.metrics.utils import calc_wer
 from torch import Tensor
 
 
-class BeanSearchWERMetric(BaseMetric):
+class BeamSearchWERMetric(BaseMetric):
     def __init__(self, text_encoder, beam_size=10, lm=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.text_encoder = text_encoder
