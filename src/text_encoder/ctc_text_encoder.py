@@ -66,12 +66,12 @@ class CTCTextEncoder:
             last_char = self.ind2char[ind]
         return "".join(decoded)
 
-    def ctc_decode_beamsearch(self, probs, length, beam_size=100) -> list[str]:
+    def ctc_decode_beamsearch(self, probs, beam_size=100) -> list[str]:
         dp = {
             ("", self.EMPTY_TOK): 1.0,
         }
-        for i in range(length):
-            dp = self._expand_and_merge_path(dp, probs[i])
+        for prob in probs:
+            dp = self._expand_and_merge_path(dp, prob)
             dp = self._truncate_paths(dp, beam_size)
 
         dp = [prefix for (prefix, _), _ in sorted(dp.items(), key=lambda x: -x[1])]
