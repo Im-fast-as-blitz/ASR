@@ -7,7 +7,7 @@ from torch import Tensor
 
 
 class BeanSearchWERMetric(BaseMetric):
-    def __init__(self, text_encoder, beam_size, lm, *args, **kwargs):
+    def __init__(self, text_encoder, beam_size=10, lm=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.text_encoder = text_encoder
         self.beam_size = beam_size
