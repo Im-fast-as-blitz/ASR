@@ -7,7 +7,7 @@ from torch import Tensor
 
 
 class BeamSearchWERMetric(BaseMetric):
-    def __init__(self, text_encoder, beam_size=10, lm=False, *args, **kwargs):
+    def __init__(self, text_encoder, beam_size=10, lm=True, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.text_encoder = text_encoder
         self.beam_size = beam_size
@@ -21,13 +21,12 @@ class BeamSearchWERMetric(BaseMetric):
         **kwargs,
     ):
         wers = []
-        # TODO add lm
         predictions = log_probs.cpu().numpy()
         lengths = log_probs_length.detach().numpy()
         for log_prob_vec, length, target_text in zip(predictions, lengths, text):
             target_text = self.text_encoder.normalize_text(target_text)
             pred_text = self.text_encoder.ctc_decode_beamsearch(
-                log_prob_vec[:length], self.beam_size
+                log_prob_vec[:length], self.beam_size, self.lm
             )
 
             wers.append(calc_wer(target_text, pred_text[0]))

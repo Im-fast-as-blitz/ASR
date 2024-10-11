@@ -18,3 +18,5 @@ pre-commit
 wget
 datasets
 editdistance
+flashlight
+flashlight-text

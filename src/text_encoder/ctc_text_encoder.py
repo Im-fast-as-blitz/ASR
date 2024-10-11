@@ -1,6 +1,7 @@
 import re
 from collections import defaultdict
 from string import ascii_lowercase
+from torchaudio.models.decoder import ctc_decoder
 
 import torch
 
@@ -25,6 +26,8 @@ class CTCTextEncoder:
 
         self.ind2char = dict(enumerate(self.vocab))
         self.char2ind = {v: k for k, v in self.ind2char.items()}
+
+        self.lm = None
 
     def __len__(self):
         return len(self.vocab)
@@ -66,7 +69,11 @@ class CTCTextEncoder:
             last_char = self.ind2char[ind]
         return "".join(decoded)
 
-    def ctc_decode_beamsearch(self, probs, beam_size=100) -> list[str]:
+    def ctc_decode_beamsearch(self, probs, beam_size=100, with_lm=True) -> list[str]:
+        if with_lm:
+            bs_decoder = ctc_decoder(tokens=self.vocab, lm=self.lm, nbest=3, beam_size=beam_size)
+            return bs_decoder(probs)
+        
         dp = {
             ("", self.EMPTY_TOK): 1.0,
         }
@@ -76,10 +83,6 @@ class CTCTextEncoder:
 
         dp = [prefix for (prefix, _), _ in sorted(dp.items(), key=lambda x: -x[1])]
         return dp
-
-    def ctc_decode_beamsearch_lm(self, probs, beam_size=100) -> list[str]:
-        # TODO
-        pass
 
     def _expand_and_merge_path(self, dp, next_token_probs):
         new_dp = defaultdict(float)
