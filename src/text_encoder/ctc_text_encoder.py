@@ -71,7 +71,7 @@ class CTCTextEncoder:
 
     def ctc_decode_beamsearch(self, probs, beam_size=100, with_lm=True) -> list[str]:
         if with_lm:
-            bs_decoder = ctc_decoder(lexicon=None, tokens=self.vocab, lm=self.lm, nbest=3, beam_size=beam_size)
+            bs_decoder = ctc_decoder(lexicon=None, tokens=self.vocab, lm=self.lm, nbest=3, beam_size=beam_size, blank_token=self.EMPTY_TOK, sil_token=" ")
             return bs_decoder(probs)
         
         dp = {
