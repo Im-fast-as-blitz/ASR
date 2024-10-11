@@ -75,7 +75,7 @@ class CTCTextEncoder:
             bs_result = bs_decoder(torch.exp(probs).float(), length)
             result = []
             for pred in bs_result:
-                result.append(tokens_str = "".join(bs_decoder.idxs_to_tokens(pred[0].tokens)))
+                result.append("".join(bs_decoder.idxs_to_tokens(pred[0].tokens)))
             return result
         
         dp = {
