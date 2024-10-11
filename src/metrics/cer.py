@@ -29,7 +29,7 @@ class BeamSearchCERMetric(BaseMetric):
             )
             for pred_text, target_text in zip(pred_texts, text):
                 print(type(pred_text[0]), pred_text)
-                cers.append(calc_cer(target_text, pred_text[0]))
+                cers.append(calc_cer(target_text, pred_text))
         else:
             predictions = predictions.numpy()
             lengths = lengths.numpy()

@@ -29,7 +29,7 @@ class BeamSearchWERMetric(BaseMetric):
                 predictions, self.beam_size, self.lm, lengths
             )
             for pred_text, target_text in zip(pred_texts, text):
-                wers.append(calc_wer(target_text, pred_text[0]))
+                wers.append(calc_wer(target_text, pred_text))
         else:
             predictions = predictions.numpy()
             lengths = lengths.numpy()
