@@ -21,7 +21,7 @@ class BeamSearchWERMetric(BaseMetric):
         **kwargs,
     ):
         wers = []
-        predictions = log_probs.cpu().numpy()
+        predictions = log_probs.cpu()
         lengths = log_probs_length.detach().numpy()
 
         if self.lm:
@@ -31,6 +31,7 @@ class BeamSearchWERMetric(BaseMetric):
             for pred_text, target_text in zip(pred_texts, text):
                 wers.append(calc_wer(target_text, pred_text[0]))
         else:
+            predictions = predictions.numpy()
             for log_prob_vec, length, target_text in zip(predictions, lengths, text):
                 target_text = self.text_encoder.normalize_text(target_text)
                 pred_text = self.text_encoder.ctc_decode_beamsearch(

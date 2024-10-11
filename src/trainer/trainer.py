@@ -101,8 +101,8 @@ class Trainer(BaseTrainer):
     ):
         beam_size = 10
 
-        probs_cpu = log_probs.cpu().numpy()
-        argmax_inds = probs_cpu.argmax(-1)
+        probs_cpu = log_probs.cpu()
+        argmax_inds = probs_cpu.argmax(-1).numpy()
         argmax_inds = [
             inds[: int(ind_len)]
             for inds, ind_len in zip(argmax_inds, log_probs_length.numpy())
