@@ -69,10 +69,12 @@ class CTCTextEncoder:
             last_char = self.ind2char[ind]
         return "".join(decoded)
 
-    def ctc_decode_beamsearch(self, probs, beam_size=100, with_lm=True) -> list[str]:
+    def ctc_decode_beamsearch(self, probs, beam_size=100, with_lm=True, length=None) -> list[str]:
         if with_lm:
             bs_decoder = ctc_decoder(lexicon=None, tokens=self.vocab, lm=self.lm, nbest=3, beam_size=beam_size, blank_token=self.EMPTY_TOK, sil_token=" ")
-            return bs_decoder(probs)
+            result = bs_decoder(torch.exp(probs).float(), length)
+            print(result.shape)
+            return result
         
         dp = {
             ("", self.EMPTY_TOK): 1.0,
