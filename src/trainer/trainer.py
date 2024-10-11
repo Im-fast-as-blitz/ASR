@@ -101,7 +101,8 @@ class Trainer(BaseTrainer):
     ):
         beam_size = 10
 
-        argmax_inds = log_probs.cpu().argmax(-1).numpy()
+        probs_cpu = log_probs.cpu().numpy()
+        argmax_inds = probs_cpu.argmax(-1)
         argmax_inds = [
             inds[: int(ind_len)]
             for inds, ind_len in zip(argmax_inds, log_probs_length.numpy())
@@ -111,7 +112,7 @@ class Trainer(BaseTrainer):
         # bs_text = self.text_encoder.ctc_decode_beamsearch_with_lm
         bs_text = [
             self.text_encoder.ctc_decode_beamsearch(prob[:length], beam_size)
-            for prob, length in zip(log_probs.cpu().numpy(), log_probs_length.numpy())
+            for prob, length in zip(probs_cpu, log_probs_length.numpy())
         ]
         tuples = list(zip(bs_text, argmax_texts, text, argmax_texts_raw, audio_path))
 
