@@ -73,7 +73,7 @@ class CTCTextEncoder:
         if with_lm:
             bs_decoder = ctc_decoder(lexicon=None, tokens=self.vocab, lm=self.lm, nbest=3, beam_size=beam_size, blank_token=self.EMPTY_TOK, sil_token=" ")
             result = bs_decoder(torch.exp(probs).float(), length)
-            print(result.shape)
+            print(len(result), len(result[0]))
             return result
         
         dp = {
