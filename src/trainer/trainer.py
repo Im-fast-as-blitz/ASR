@@ -39,10 +39,12 @@ class Trainer(BaseTrainer):
             metric_funcs = self.metrics["train"]
             self.optimizer.zero_grad()
 
+        # print(batch)
         outputs = self.model(**batch)
         batch.update(outputs)
 
         all_losses = self.criterion(**batch)
+        # print(all_losses["loss"].item())
         batch.update(all_losses)
 
         if self.is_train:

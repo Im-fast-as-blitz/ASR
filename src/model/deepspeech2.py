@@ -81,7 +81,10 @@ class DeepSpeech2(nn.Module):
             nn.ReLU(),
         )
 
-        n_feats = self.transform_input_lengths(n_feats)
+        # n_feats = self.transform_input_lengths(n_feats)
+        n_feats = (n_feats + 2 * 20 - 41) // 2 + 1
+        n_feats = (n_feats + 2 * 10 - 21) // 2 + 1
+        n_feats = (n_feats + 2 * 10 - 21) // 2 + 1
         self.gru = nn.Sequential(GRU(96 * n_feats, fc_hidden))
         for i in range(gru_count - 1):
             self.gru.append(GRU(fc_hidden, fc_hidden))
@@ -127,9 +130,9 @@ class DeepSpeech2(nn.Module):
         Returns:
             output_lengths (Tensor): new temporal lengths
         """
-        output_lengths = (input_lengths + 20 * 2 - 41) // 2 + 1
-        output_lengths = (output_lengths + 10 * 2 - 21) // 2 + 1
-        output_lengths = (output_lengths + 10 * 2 - 21) // 2 + 1
+        output_lengths = (input_lengths + 2 * 5 - 1 * (11 - 1) - 1) // 2 + 1
+        output_lengths = (output_lengths + 2 * 5 - 1 * (11 - 1) - 1) // 1 + 1
+        output_lengths = (output_lengths + 2 * 5 - 1 * (11 - 1) - 1) // 1 + 1
         return output_lengths
 
     def __str__(self):
