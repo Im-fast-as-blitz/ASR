@@ -119,8 +119,8 @@ class Trainer(BaseTrainer):
             wer = calc_wer(target, pred) * 100
             cer = calc_cer(target, pred) * 100
 
-            bs_wer = calc_wer(target, bs_pred[0]) * 100
-            bs_cer = calc_cer(target, bs_pred[0]) * 100
+            bs_wer = calc_wer(target, bs_pred) * 100
+            bs_cer = calc_cer(target, bs_pred) * 100
 
             rows[Path(audio_path).name] = {
                 "target": target,
