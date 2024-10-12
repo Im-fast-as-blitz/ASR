@@ -76,11 +76,10 @@ class CTCTextEncoder:
             result = []
             for pred in bs_result:
                 res_str = "".join(bs_decoder.idxs_to_tokens(pred[0].tokens))
-                while res_str[0] != " ":
+                while res_str[0] == " ":
                     res_str = res_str[1:]
                 result.append(res_str)
             return result
-        
         dp = {
             ("", self.EMPTY_TOK): 1.0,
         }
