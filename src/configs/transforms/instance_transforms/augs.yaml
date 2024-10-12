@@ -25,7 +25,6 @@ train:
             sample_rate: 16000
           - _target_: src.transforms.wav_augs.BandPassFilter
             p: 1.0
-            min_bandwidth_fraction: 1.5
             min_center_frequency: 1000
             max_center_frequency: 2000
             sample_rate: 16000

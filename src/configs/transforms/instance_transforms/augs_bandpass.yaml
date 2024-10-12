@@ -10,12 +10,11 @@ inference:
   get_spectrogram:
     _target_: torchaudio.transforms.MelSpectrogram
     sample_rate: 16000
-    audio: # name of the tensor on which we apply transform
-      _target_: torchvision.transforms.v2.Compose
-      transforms:
-        - _target_: src.transforms.wav_augs.BandPassFilter
-          p: 1.0
-          min_bandwidth_fraction: 1.5
-          min_center_frequency: 1000
-          max_center_frequency: 2000
-          sample_rate: 16000
+  audio: # name of the tensor on which we apply transform
+    _target_: torchvision.transforms.v2.Compose
+    transforms:
+      - _target_: src.transforms.wav_augs.BandPassFilter
+        p: 1.0
+        min_center_frequency: 1000
+        max_center_frequency: 2000
+        sample_rate: 16000
