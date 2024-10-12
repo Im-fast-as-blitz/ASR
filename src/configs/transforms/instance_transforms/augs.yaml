@@ -14,17 +14,17 @@ train:
         p: 0.5
         transforms:
           - _target_: src.transforms.wav_augs.LowPassFilter
-            p: 1.0
+            p: 0.5
             min_cutoff_freq: 500
             max_cutoff_freq: 1500
             sample_rate: 16000
           - _target_: src.transforms.wav_augs.HighPassFilter
-            p: 1.0
+            p: 0.5
             min_cutoff_freq: 500
             max_cutoff_freq: 1500
             sample_rate: 16000
           - _target_: src.transforms.wav_augs.BandPassFilter
-            p: 1.0
+            p: 0.5
             min_center_frequency: 1000
             max_center_frequency: 2000
             sample_rate: 16000

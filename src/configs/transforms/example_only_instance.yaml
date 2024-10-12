@@ -1,5 +1,5 @@
 defaults:
-  - instance_transforms: augs_bandpass
+  - instance_transforms: augs
   # - instance_transforms: example
   - _self_
 
