@@ -17,4 +17,4 @@ inference:
         p: 1.0
         min_cutoff_freq: 500
         max_cutoff_freq: 1500
-        sample_rate: ${datasets.train.target_sr}
+        sample_rate: 16000

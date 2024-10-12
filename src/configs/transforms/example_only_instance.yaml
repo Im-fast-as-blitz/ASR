@@ -1,5 +1,6 @@
 defaults:
-  - instance_transforms: example
+  - instance_transforms: augs_lowpass
+  # - instance_transforms: example
   - _self_
 
 # these lines are required if you do not use batch transforms
