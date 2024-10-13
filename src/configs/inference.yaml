@@ -3,7 +3,7 @@ defaults:
   - metrics: example
   - datasets: inference
   - dataloader: example
-  - transforms: example
+  - transforms: example_only_instances
   - _self_
 text_encoder:
   _target_: src.text_encoder.CTCTextEncoder
