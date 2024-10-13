@@ -137,12 +137,12 @@ class Inferencer(BaseTrainer):
         # Some saving logic. This is an example
         # Use if you need to save predictions on disk
 
-        batch_size = batch["probs"].shape[0]
+        batch_size = batch["log_probs"].shape[0]
         current_id = batch_idx * batch_size
 
         for i in range(batch_size):
-            probs = batch["probs"][i].cpu()
-            length = batch["probs_length"][i].cpu()
+            probs = batch["log_probs"][i].cpu()
+            length = batch["log_probs_length"][i].cpu()
             text = batch["text"][i]
             pred_text = self.text_encoder.ctc_decode_beamsearch(probs, beam_size=10, with_lm=True, length=length)
 
