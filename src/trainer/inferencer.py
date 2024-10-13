@@ -1,8 +1,9 @@
 import torch
 from src.metrics.tracker import MetricTracker
 from src.trainer.base_trainer import BaseTrainer
-from src.metrics.utils import calc_cer, calc_wer
 from tqdm.auto import tqdm
+from src.utils.io_utils import write_json
+from pathlib import Path
 
 
 class Inferencer(BaseTrainer):
@@ -137,22 +138,23 @@ class Inferencer(BaseTrainer):
         batch_size = batch["log_probs"].shape[0]
         current_id = batch_idx * batch_size
 
-        pred_texts = self.text_encoder.ctc_decode_beamsearch(batch["log_probs"].cpu(), beam_size=10, with_lm=True, length=batch["log_probs_length"].cpu())
+        bs_pred_texts = self.text_encoder.ctc_decode_beamsearch(batch["log_probs"].cpu(), beam_size=10, with_lm=True, length=batch["log_probs_length"].cpu())
 
         for i in range(batch_size):
+            # beam search
             text = batch["text"][i]
-            pred_text = pred_texts[i]
+            bs_pred_text = bs_pred_texts[i]
 
             output_id = current_id + i
 
             output = {
-                "pred_text": pred_text,
+                "pred_text": bs_pred_text,
                 "text": text,
             }
 
             if self.save_path is not None:
                 # you can use safetensors or other lib here
-                torch.save(output, self.save_path / part / f"output_{output_id}.pth")
+                write_json(output, self.save_path / part / f"output_{output_id}.json")
 
         return batch
 

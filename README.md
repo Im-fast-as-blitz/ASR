@@ -80,7 +80,7 @@ python3 inference.py -cn=inference_other
 
 All my graphs with experiments on obtaining my solution can be found [`here`](https://wandb.ai/rodion-chernomordin/pytorch_template_asr_example/overview) (there are also separate conclusions for each of the augmentation)
 
-I will keep my course of action in the same order as the graphs are arranged. First of all, I made baseline and one batch test (which will be better later), changed max lr to 1-e3, added log-scaling to spectrograms (at least better perception) and a self-written beam search (in the corresponding graph you can see how it works - goes through all possible options).
+I will keep my course of action in the same order as the graphs are arranged. First of all, I made baseline and one batch test (which will be better later), changed max lr to 1-e3, added log-scaling to spectrograms (at least better perception) and a self-written beam search (in the corresponding graph you can see how it works - goes through all possible options. As proof that my beam search is working correctly, I have displayed it in every training).
 
 You can see that all the graphs give out a strange loss and bad metrics - the mistake was that I incorrectly calculated the length of the output sequences of probabilities.
 
