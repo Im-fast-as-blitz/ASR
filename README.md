@@ -113,9 +113,7 @@ The result on clean data turned out to be slightly worse than without it, but I 
 
 My next and final step was to expand the amount of data (use all three datasets) and increase the batch size to 64.
 
-The final result of my [`model`]():
-- test-clean: 
-- test-other: 
+[`Final model`](https://drive.google.com/file/d/1LoU_kCzl20hM5p709teRPB0a4Jib8VK-/view?usp=sharing)
 
 ## Credits
 
