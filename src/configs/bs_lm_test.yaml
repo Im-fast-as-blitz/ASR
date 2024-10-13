@@ -3,8 +3,8 @@ defaults:
   - writer: wandb
   - metrics: example
   - datasets: train-100
-  - dataloader: example
-  - transforms: example_only_instance
+  - dataloader: example_10bs
+  - transforms: example_only_instance_no_augs
   - _self_
 optimizer:
   _target_: torch.optim.AdamW

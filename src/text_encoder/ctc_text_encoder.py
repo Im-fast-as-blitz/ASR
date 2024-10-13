@@ -63,7 +63,7 @@ class CTCTextEncoder:
         self.char2ind = {v: k for k, v in self.ind2char.items()}
 
         download_model()
-        self.lm = kenlm.Model("data/sub_models/lowercase_4-gram.arpa")
+        self.lm = "data/sub_models/lowercase_4-gram.arpa"
 
     def __len__(self):
         return len(self.vocab)
