@@ -22,3 +22,4 @@ flashlight
 flashlight-text
 requests
 kenlm
+gdown

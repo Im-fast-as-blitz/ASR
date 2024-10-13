@@ -1,6 +1,7 @@
 import torch
 from src.metrics.tracker import MetricTracker
 from src.trainer.base_trainer import BaseTrainer
+from src.metrics.utils import calc_cer, calc_wer
 from tqdm.auto import tqdm
 
 
@@ -24,6 +25,7 @@ class Inferencer(BaseTrainer):
         metrics=None,
         batch_transforms=None,
         skip_model_load=False,
+        print_metrics=True
     ):
         """
         Initialize the Inferencer.
@@ -82,6 +84,8 @@ class Inferencer(BaseTrainer):
         if not skip_model_load:
             # init model
             self._from_pretrained(config.inferencer.get("from_pretrained"))
+        
+        self.print_metrics = print_metrics
 
     def run_inference(self):
         """
@@ -137,8 +141,8 @@ class Inferencer(BaseTrainer):
         current_id = batch_idx * batch_size
 
         for i in range(batch_size):
-            probs = batch["probs"][i].numpy()
-            length = batch["probs_length"][i].numpy()
+            probs = batch["probs"][i].cpu()
+            length = batch["probs_length"][i].cpu()
             text = batch["text"][i]
             pred_text = self.text_encoder.ctc_decode_beamsearch(probs, beam_size=10, with_lm=True, length=length)
 
@@ -148,6 +152,21 @@ class Inferencer(BaseTrainer):
                 "pred_text": pred_text,
                 "text": text,
             }
+
+            # if self.print_metrics:
+            #     argmax_inds = probs_cpu.argmax(-1).numpy()
+            #     argmax_inds = [
+            #         inds[: int(ind_len)]
+            #         for inds, ind_len in zip(argmax_inds, log_probs_length.numpy())
+            #     ]
+            #     argmax_texts_raw = [self.text_encoder.decode(inds) for inds in argmax_inds]
+            #     argmax_texts = [self.text_encoder.ctc_decode(inds) for inds in argmax_inds]
+            #     target = self.text_encoder.normalize_text(text)
+            #     wer = calc_wer(target, pred_text) * 100
+            #     cer = calc_cer(target, pred_text) * 100
+
+            #     bs_wer = calc_wer(target, pred_text) * 100
+            #     bs_cer = calc_cer(target, pred_text) * 100
 
             if self.save_path is not None:
                 # you can use safetensors or other lib here
