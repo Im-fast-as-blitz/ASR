@@ -21,7 +21,4 @@ editdistance
 flashlight
 flashlight-text
 requests
-gzip
-shutil
-os
 kenlm
