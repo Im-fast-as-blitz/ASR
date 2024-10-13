@@ -140,11 +140,11 @@ class Inferencer(BaseTrainer):
         batch_size = batch["log_probs"].shape[0]
         current_id = batch_idx * batch_size
 
+        pred_texts = self.text_encoder.ctc_decode_beamsearch(batch["log_probs"].cpu(), beam_size=10, with_lm=True, length=batch["log_probs_length"].cpu())
+
         for i in range(batch_size):
-            probs = batch["log_probs"][i].cpu()
-            length = batch["log_probs_length"][i].cpu()
             text = batch["text"][i]
-            pred_text = self.text_encoder.ctc_decode_beamsearch(probs, beam_size=10, with_lm=True, length=length)
+            pred_text = pred_texts[i]
 
             output_id = current_id + i
 
