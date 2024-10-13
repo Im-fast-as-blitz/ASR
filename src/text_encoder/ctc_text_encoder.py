@@ -64,6 +64,7 @@ class CTCTextEncoder:
 
         download_model()
         self.lm = "data/sub_models/lowercase_4-gram.arpa"
+        self.bs_decoder = None
 
     def __len__(self):
         return len(self.vocab)
@@ -107,11 +108,12 @@ class CTCTextEncoder:
 
     def ctc_decode_beamsearch(self, probs, beam_size=100, with_lm=True, length=None) -> list[str]:
         if with_lm:
-            bs_decoder = ctc_decoder(lexicon=None, tokens=self.vocab, lm=self.lm, nbest=3, beam_size=beam_size, blank_token=self.EMPTY_TOK, sil_token=" ")
-            bs_result = bs_decoder(torch.exp(probs).float(), length)
+            if self.bs_decoder is None:
+                self.bs_decoder = ctc_decoder(lexicon=None, tokens=self.vocab, lm=self.lm, nbest=3, beam_size=beam_size, blank_token=self.EMPTY_TOK, sil_token=" ")
+            bs_result = self.bs_decoder(torch.exp(probs).float(), length)
             result = []
             for pred in bs_result:
-                res_str = "".join(bs_decoder.idxs_to_tokens(pred[0].tokens))
+                res_str = "".join(self.bs_decoder.idxs_to_tokens(pred[0].tokens))
                 if res_str[0] == " ":
                     res_str = res_str[1:]
                 result.append(res_str)
