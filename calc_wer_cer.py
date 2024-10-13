@@ -23,6 +23,6 @@ def main(dir_path):
 
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
-    args.add_argument("--dir_path", default="data/saved/predict", type=str)
+    args.add_argument("--dir_path", default="data/saved/predict/test", type=str)
     args = args.parse_args()
     main(args.dir_path)

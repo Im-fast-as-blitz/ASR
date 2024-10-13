@@ -64,6 +64,12 @@ Where the model will learn 50 epochs on all datasets from leebspeech
 
 To run inference (evaluate the model or save predictions):
 
+Dowload model:
+
+```bash
+python3 download_model.py
+```
+
 For predicts on test-clean dataset:
 
 ```bash
@@ -75,6 +81,14 @@ For predicts on test-other dataset:
 ```bash
 python3 inference.py -cn=inference_other
 ```
+
+To calc cer/wer
+
+```bash
+python3 calc_wer_cer.py --dir_path dir
+```
+
+Where dir is path to your dir (example "/ASR/data/saved/predict/test")
 
 ## About work
 
