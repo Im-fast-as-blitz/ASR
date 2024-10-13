@@ -5,7 +5,42 @@ from torchaudio.models.decoder import ctc_decoder
 
 import torch
 
+import requests
+import gzip
+import shutil
+import os
+import kenlm
+
+
 # TODO add BPE
+
+def download_model():
+    url = 'http://www.openslr.org/resources/11/4-gram.arpa.gz'
+
+    download_path = '4-gram.arpa.gz'
+    extracted_file_path = 'lowercase_4-gram.arpa'
+
+    print("Начинается скачивание файла с моделью")
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:
+        with open(download_path, 'wb') as f:
+            f.write(response.raw.read())
+    else:
+        print("Ошибка загрузки файла:", response.status_code)
+
+    print("Начинаеncz распаковка файла")
+    if os.path.exists(download_path):
+        with gzip.open(download_path, 'rb') as f_in, open(extracted_file_path, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+        os.remove("4-gram.arpa.gz")
+        os.makedirs("data/sub_models/", exist_ok=True)
+        os.rename(
+            "lowercase_4-gram.arpa",
+            "data/sub_models/lowercase_4-gram.arpa",
+        )
+        print(f"Файл {extracted_file_path} успешно создан.")
+    else:
+        print("Скачанный файл не найден.")
 
 
 class CTCTextEncoder:
@@ -27,7 +62,8 @@ class CTCTextEncoder:
         self.ind2char = dict(enumerate(self.vocab))
         self.char2ind = {v: k for k, v in self.ind2char.items()}
 
-        self.lm = None
+        download_model()
+        self.lm = kenlm.Model("data/sub_models/lowercase_4-gram.arpa")
 
     def __len__(self):
         return len(self.vocab)
