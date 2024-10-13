@@ -9,7 +9,6 @@ import requests
 import gzip
 import shutil
 import os
-import kenlm
 
 
 # TODO add BPE
@@ -109,13 +108,11 @@ class CTCTextEncoder:
     def ctc_decode_beamsearch(self, probs, beam_size=100, with_lm=True, length=None) -> list[str]:
         if with_lm:
             if self.bs_decoder is None:
-                self.bs_decoder = ctc_decoder(lexicon=None, tokens=self.vocab, lm=self.lm, nbest=3, beam_size=beam_size, blank_token=self.EMPTY_TOK, sil_token=" ")
+                self.bs_decoder = ctc_decoder(lexicon=None, tokens=self.vocab, lm=self.lm, nbest=3, beam_size=50, blank_token=self.EMPTY_TOK, sil_token=" ", lm_weight=2)
             bs_result = self.bs_decoder(torch.exp(probs).float(), length)
             result = []
             for pred in bs_result:
-                res_str = "".join(self.bs_decoder.idxs_to_tokens(pred[0].tokens))
-                if res_str[0] == " ":
-                    res_str = res_str[1:]
+                res_str = self.decode(pred[0].tokens)
                 result.append(res_str)
             return result
         dp = {

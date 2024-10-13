@@ -10,9 +10,7 @@
 
 ## About
 
-This repository contains a template for solving ASR task with PyTorch. This template branch is a part of the [HSE DLA course](https://github.com/markovka17/dla) ASR homework. Some parts of the code are missing (or do not follow the most optimal design choices...) and students are required to fill these parts themselves (as well as writing their own models, etc.).
-
-See the task assignment [here](https://github.com/markovka17/dla/tree/2024/hw1_asr).
+This repository is a system for training the [`deepspeech2`](http://proceedings.mlr.press/v48/amodei16.pdf) model for an ASR task.
 
 ## Installation
 
@@ -59,24 +57,51 @@ Follow these steps to install the project:
 To train a model, run the following command:
 
 ```bash
-python3 train.py -cn=CONFIG_NAME HYDRA_CONFIG_ARGUMENTS
+python3 train.py -cn=deepspeech2
 ```
 
-Where `CONFIG_NAME` is a config from `src/configs` and `HYDRA_CONFIG_ARGUMENTS` are optional arguments.
+Where the model will learn 50 epochs on all datasets from leebspeech
 
 To run inference (evaluate the model or save predictions):
 
+For predicts on test-clean dataset:
+
 ```bash
-python3 inference.py HYDRA_CONFIG_ARGUMENTS
+python3 inference.py -cn=inference
 ```
 
-## TODO
+For predicts on test-other dataset:
 
-0. src/metrics/utils calc_cer calc_wer
+```bash
+python3 inference.py -cn=inference_other
+```
 
-1. src/text_encoder/ctc_text_encoder.py ctc_decode ctc_decode_beamsearch
+## About work
 
-2. src/datasets collate_fn
+All my graphs with experiments on obtaining my solution can be found [`here`](https://wandb.ai/rodion-chernomordin/pytorch_template_asr_example/overview) (there are also separate conclusions for each of the augmentation)
+
+I will keep my course of action in the same order as the graphs are arranged. First of all, I made baseline and one batch test (which will be better later), changed max lr to 1-e3, added log-scaling to spectrograms (at least better perception) and a self-written beam search (in the corresponding graph you can see how it works - goes through all possible options).
+
+You can see that all the graphs give out a strange loss and bad metrics - the mistake was that I incorrectly calculated the length of the output sequences of probabilities.
+
+At this moment, my learning model has the following hyperparameters:
+
+- start lr 1e-4
+- max lr 1e-3
+- num epochs 50 (200 iter)
+- batch size 10
+- train dataset: clean-100
+- beam size 10
+- model parametrs 28086844
+
+I added 4 augmentations: LowPassFilter, HighPassFilter, Color Noise, BandPassFilter. The probability of each one being triggered is about 1/4. 
+The result on clean data turned out to be slightly worse than without it, but I was ready to do it, because then my model would work a little better with "other" data and there would be no overfiting in the future.
+
+My next and final step was to expand the amount of data (use all three datasets) and increase the batch size to 64.
+
+The final result of my [`model`]():
+- test-clean: 
+- test-other: 
 
 ## Credits
 
